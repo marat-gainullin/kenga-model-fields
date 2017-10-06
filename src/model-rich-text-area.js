@@ -1,20 +1,15 @@
-define([
-    'core/extend',
-    '../fields/rich-text-area',
-    'ui/bound',
-    '../decorator'
-], function (
-        extend,
-        Area,
-        Bound,
-        Decorator) {
-    function ModelRichTextArea(text) {
+import Area from '../fields/rich-text-area';
+import Bound from 'ui/bound';
+import Decorator from '../decorator';
+
+class ModelRichTextArea extends Area {
+    constructor(text) {
         if (arguments.length < 1)
             text = '';
-        Area.call(this, text);
+        super(text);
         Bound.call(this);
         Decorator.call(this);
     }
-    extend(ModelRichTextArea, Area);
-    return ModelRichTextArea;
-});
+}
+
+export default ModelRichTextArea;

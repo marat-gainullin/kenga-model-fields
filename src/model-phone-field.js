@@ -1,18 +1,13 @@
-define([
-    'core/extend',
-    '../fields/phone-field',
-    'ui/bound',
-    '../decorator'
-], function (
-        extend,
-        Field,
-        Bound,
-        Decorator) {
-    function ModelPhoneField() {
-        Field.call(this, document.createElement('div'));
+import Field from '../fields/phone-field';
+import Bound from 'ui/bound';
+import Decorator from '../decorator';
+
+class ModelPhoneField extends Field {
+    constructor() {
+        super(document.createElement('div'));
         Bound.call(this);
         Decorator.call(this);
     }
-    extend(ModelPhoneField, Field);
-    return ModelPhoneField;
-});
+}
+
+export default ModelPhoneField;

@@ -1,15 +1,11 @@
-define([
-    'core/extend',
-    '../fields/meter-field',
-    'ui/bound'
-], function (
-        extend,
-        Field,
-        Bound) {
-    function ModelMeterField() {
-        Field.call(this, document.createElement('div'));
+import Field from '../fields/meter-field';
+import Bound from 'ui/bound';
+
+class ModelMeterField extends Field {
+    constructor() {
+        super(document.createElement('div'));
         Bound.call(this);
     }
-    extend(ModelMeterField, Field);
-    return ModelMeterField;
-});
+}
+
+export default ModelMeterField;

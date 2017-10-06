@@ -1,18 +1,13 @@
-define([
-    'core/extend',
-    '../fields/date-field',
-    'ui/bound',
-    '../decorator'
-], function (
-        extend,
-        Field,
-        Bound,
-        Decorator) {
-    function ModelDateField() {
-        Field.call(this, document.createElement('div'));
+import Field from '../fields/date-field';
+import Bound from 'ui/bound';
+import Decorator from '../decorator';
+
+class ModelDateField extends Field {
+    constructor() {
+        super(document.createElement('div'));
         Bound.call(this);
         Decorator.call(this);
     }
-    extend(ModelDateField, Field);
-    return ModelDateField;
-});
+}
+
+export default ModelDateField;

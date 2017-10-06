@@ -1,18 +1,13 @@
-define([
-    'core/extend',
-    '../fields/color-field',
-    'ui/bound',
-    '../decorator'
-], function (
-        extend,
-        Field,
-        Bound,
-        Decorator) {
-    function ModelColorField() {
-        Field.call(this, document.createElement('div'));
+import Field from '../fields/color-field';
+import Bound from 'ui/bound';
+import Decorator from '../decorator';
+
+class ModelColorField extends Field {
+    constructor() {
+        super(document.createElement('div'));
         Bound.call(this);
         Decorator.call(this);
     }
-    extend(ModelColorField, Field);
-    return ModelColorField;
-});
+}
+
+export default ModelColorField;

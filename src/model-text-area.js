@@ -1,18 +1,13 @@
-define([
-    'core/extend',
-    '../fields/text-area',
-    'ui/bound',
-    '../decorator'
-], function (
-        extend,
-        Field,
-        Bound,
-        Decorator) {
-    function ModelTextArea() {
-        Field.call(this, document.createElement('div'));
+import Field from '../fields/text-area';
+import Bound from 'ui/bound';
+import Decorator from '../decorator';
+
+class ModelTextArea extends Field {
+    constructor() {
+        super(document.createElement('div'));
         Bound.call(this);
         Decorator.call(this);
     }
-    extend(ModelTextArea, Field);
-    return ModelTextArea;
-});
+}
+
+export default ModelTextArea;

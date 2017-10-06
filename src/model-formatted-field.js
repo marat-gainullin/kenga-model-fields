@@ -1,18 +1,13 @@
-define([
-    'core/extend',
-    '../fields/formatted-field',
-    'ui/bound',
-    '../decorator'
-], function (
-        extend,
-        Field,
-        Bound,
-        Decorator) {
-    function ModelFormattedField() {
-        Field.call(this, document.createElement('div'));
+import Field from '../fields/formatted-field';
+import Bound from 'ui/bound';
+import Decorator from '../decorator';
+
+class ModelFormattedField extends Field {
+    constructor() {
+        super(document.createElement('div'));
         Bound.call(this);
         Decorator.call(this);
     }
-    extend(ModelFormattedField, Field);
-    return ModelFormattedField;
-});
+}
+
+export default ModelFormattedField;

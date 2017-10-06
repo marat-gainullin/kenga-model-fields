@@ -1,15 +1,11 @@
-define([
-    'core/extend',
-    '../fields/progress-field',
-    'ui/bound'
-], function (
-        extend,
-        Field,
-        Bound) {
-    function ModelProgressField() {
-        Field.call(this, null, document.createElement('div'));
+import Field from '../fields/progress-field';
+import Bound from 'ui/bound';
+
+class ModelProgressField extends Field {
+    constructor() {
+        super(null, document.createElement('div'));
         Bound.call(this);
     }
-    extend(ModelProgressField, Field);
-    return ModelProgressField;
-});
+}
+
+export default ModelProgressField;

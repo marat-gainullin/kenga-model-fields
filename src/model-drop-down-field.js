@@ -1,26 +1,21 @@
-define([
-    'core/extend',
-    '../fields/drop-down-field',
-    'ui/bound',
-    '../decorator'
-], function (
-        extend,
-        Field,
-        Bound,
-        Decorator) {
-    function ModelDropDownField() {
-        Field.call(this, document.createElement('div'));
+import Field from '../fields/drop-down-field';
+import Bound from 'ui/bound';
+import Decorator from '../decorator';
+
+class ModelDropDownField extends Field {
+    constructor() {
+        super(document.createElement('div'));
         Bound.call(this);
         Decorator.call(this);
 
-        var self = this;
+        const self = this;
 
-        var lengthReg = null;
-        var elementsReg = null;
-        var values = null;
-        var displayField = null;
-        
-        function unbindValues(){
+        let lengthReg = null;
+        let elementsReg = null;
+        let values = null;
+        let displayField = null;
+
+        function unbindValues() {
             if (lengthReg) {
                 lengthReg.unlisten();
                 lengthReg = null;
@@ -31,17 +26,17 @@ define([
             }
             self.clear();
         }
-        
+
         function bindValues() {
             if (values) {
-                values.forEach(function (item) {
-                    self.addValue(displayField ? item[displayField] : item /* assume plain values */, item);
+                values.forEach(item => {
+                    self.addValue(displayField ? item[displayField] : item /* assume plain values */ , item);
                 });
-                lengthReg = Bound.listen(values, function (evt) {
+                lengthReg = Bound.listen(values, evt => {
                     if (evt.propertyName === 'length')
                         rebindValues();
                 });
-                elementsReg = Bound.observeElements(values, function (evt) {
+                elementsReg = Bound.observeElements(values, evt => {
                     if (evt.propertyName === displayField)
                         self.updateLabel(evt.source, evt.newValue);
                 });
@@ -52,12 +47,12 @@ define([
             unbindValues();
             bindValues();
         }
-        
+
         Object.defineProperty(this, 'values', {
-            get: function () {
+            get: function() {
                 return values;
             },
-            set: function (aValue) {
+            set: function(aValue) {
                 if (values !== aValue) {
                     unbindValues();
                     values = aValue;
@@ -68,10 +63,10 @@ define([
 
 
         Object.defineProperty(this, 'displayField', {
-            get: function () {
+            get: function() {
                 return displayField;
             },
-            set: function (aValue) {
+            set: function(aValue) {
                 if (displayField !== aValue) {
                     displayField = aValue;
                     rebindValues();
@@ -79,6 +74,6 @@ define([
             }
         });
     }
-    extend(ModelDropDownField, Field);
-    return ModelDropDownField;
-});
+}
+
+export default ModelDropDownField;

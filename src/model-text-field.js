@@ -1,20 +1,15 @@
-define([
-    'core/extend',
-    '../fields/text-field',
-    'ui/bound',
-    '../decorator'
-], function (
-        extend,
-        Field,
-        Bound,
-        Decorator) {
-    function ModelTextField(text) {
+import Field from '../fields/text-field';
+import Bound from 'ui/bound';
+import Decorator from '../decorator';
+
+class ModelTextField extends Field {
+    constructor(text) {
         if (arguments.length < 1)
             text = '';
-        Field.call(this, text, null, document.createElement('div'));
+        super(text, null, document.createElement('div'));
         Bound.call(this);
         Decorator.call(this);
     }
-    extend(ModelTextField, Field);
-    return ModelTextField;
-});
+}
+
+export default ModelTextField;

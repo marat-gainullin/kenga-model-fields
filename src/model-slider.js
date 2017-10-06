@@ -1,18 +1,13 @@
-define([
-    'core/extend',
-    '../fields/slider',
-    'ui/bound',
-    '../decorator'
-], function (
-        extend,
-        Field,
-        Bound,
-        Decorator) {
-    function ModelSliderField() {
-        Field.call(this, document.createElement('div'));
+import Field from '../fields/slider';
+import Bound from 'ui/bound';
+import Decorator from '../decorator';
+
+class ModelSliderField extends Field {
+    constructor() {
+        super(document.createElement('div'));
         Bound.call(this);
         Decorator.call(this);
     }
-    extend(ModelSliderField, Field);
-    return ModelSliderField;
-});
+}
+
+export default ModelSliderField;
