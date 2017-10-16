@@ -1,6 +1,6 @@
-import Field from '../fields/formatted-field';
-import Bound from 'ui/bound';
-import Decorator from '../decorator';
+import Decorator from 'kenga/decorator';
+import Bound from 'kenga/bound';
+import Field from 'kenga-fields/formatted-field';
 
 class ModelFormattedField extends Field {
     constructor() {

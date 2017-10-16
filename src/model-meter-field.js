@@ -1,5 +1,5 @@
-import Field from '../fields/meter-field';
-import Bound from 'ui/bound';
+import Bound from 'kenga/bound';
+import Field from 'kenga-fields/meter-field';
 
 class ModelMeterField extends Field {
     constructor() {

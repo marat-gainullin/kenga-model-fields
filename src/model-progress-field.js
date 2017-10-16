@@ -1,5 +1,5 @@
-import Field from '../fields/progress-field';
-import Bound from 'ui/bound';
+import Bound from 'kenga/bound';
+import Field from 'kenga-fields/progress-field';
 
 class ModelProgressField extends Field {
     constructor() {

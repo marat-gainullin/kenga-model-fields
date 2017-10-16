@@ -1,11 +1,36 @@
 /* global expect */
 /* global NaN */
+import '../src/layout.css';
+import '../src/theme.css';
 
-describe('Model fields Api', function () {
+import Id from 'septima-utils/id';
+import Invoke from 'septima-utils/invoke';
+import Model from 'septima-model/model';
+import Entity from 'septima-model/entity';
+import Color from 'kenga/color';
+import ModelColorField from '../src/model-color-field';
+import ModelDateField from '../src/model-date-field';
+import ModelDateTimeField from '../src/model-date-time-field';
+import ModelDropDownField from '../src/model-drop-down-field';
+import ModelEMailField from '../src/model-email-field';
+import ModelFormattedField from '../src/model-formatted-field';
+import ModelMeterField from '../src/model-meter-field';
+import ModelNumberField from '../src/model-number-field';
+import ModelPasswordField from '../src/model-password-field';
+import ModelPhoneField from '../src/model-phone-field';
+import ModelProgressField from '../src/model-progress-field';
+import ModelTextField from '../src/model-text-field';
+import ModelTextArea from '../src/model-text-area';
+import ModelRichTextArea from '../src/model-rich-text-area';
+import ModelSlider from '../src/model-slider';
+import ModelTimeField from '../src/model-time-field';
+import ModelUrlField from '../src/model-url-field';
 
-    var house1 = {name: 'Angelville'};
-    var house2 = {name: 'Enville'};
-    var houses = [house1, house2];
+describe('Model fields Api', () => {
+
+    const house1 = {name: 'Angelville'};
+    const house2 = {name: 'Enville'};
+    const houses = [house1, house2];
 
     function fill(entity, Id, Color) {
         entity.push(
@@ -20,15 +45,15 @@ describe('Model fields Api', function () {
         expect(entity.cursor).toBe(entity[6]);
     }
 
-    function expectPathReverseBinding(Model, Entity, Id, Color, instance, propertyName) {
-        var model = new Model();
-        var entity = new Entity();
+    function expectPathReverseBinding(instance, propertyName) {
+        const model = new Model();
+        const entity = new Entity();
         model.addEntity(entity);
         fill(entity, Id, Color);
 
         expect(instance.value).toBeNull();
         instance.data = entity;
-        instance.field = 'cursor.' + propertyName;
+        instance.field = `cursor.${propertyName}`;
 
         if (propertyName === 'name')
             entity[6][propertyName] += ' 1';
@@ -43,7 +68,7 @@ describe('Model fields Api', function () {
         else if (propertyName === 'house')
             entity[6][propertyName] = house2;
         else
-            throw "Unknown property '" + propertyName + "'";
+            throw `Unknown property '${propertyName}'`;
         expect(instance.value).toBe(entity[6][propertyName]);
 
         entity.cursor = entity[0];
@@ -65,9 +90,9 @@ describe('Model fields Api', function () {
         expect(instance.value).toBeNull();
     }
 
-    function expectPlainReverseBinding(Model, Entity, Id, Color, instance, propertyName) {
-        var model = new Model();
-        var entity = new Entity();
+    function expectPlainReverseBinding(instance, propertyName) {
+        const model = new Model();
+        const entity = new Entity();
         model.addEntity(entity);
         fill(entity, Id, Color);
 
@@ -89,19 +114,19 @@ describe('Model fields Api', function () {
         else if (propertyName === 'house')
             entity[6][propertyName] = house2;
         else
-            throw "Unknown property '" + propertyName + "'";
+            throw `Unknown property '${propertyName}'`;
         expect(instance.value).toBe(entity[6][propertyName]);
     }
 
-    function expectPathForwardBinding(Model, Entity, Id, Color, instance, Invoke, propertyName, done) {
-        var model = new Model();
-        var entity = new Entity();
+    function expectPathForwardBinding(instance, propertyName, done) {
+        const model = new Model();
+        const entity = new Entity();
         model.addEntity(entity);
         fill(entity, Id, Color);
 
         expect(instance.value).toBeNull();
         instance.data = entity;
-        instance.field = 'cursor.' + propertyName;
+        instance.field = `cursor.${propertyName}`;
 
         if (propertyName === 'name')
             instance.value += ' 1';
@@ -116,16 +141,16 @@ describe('Model fields Api', function () {
         else if (propertyName === 'house')
             instance.value = house2;
         else
-            throw "Unknown property '" + propertyName + "'";
-        Invoke.later(function () {
+            throw `Unknown property '${propertyName}'`;
+        Invoke.later(() => {
             expect(entity[6][propertyName]).toBe(instance.value);
             done();
         });
     }
 
-    function expectPlainForwardBinding(Model, Entity, Id, Color, instance, Invoke, propertyName, done) {
-        var model = new Model();
-        var entity = new Entity();
+    function expectPlainForwardBinding(instance, propertyName, done) {
+        const model = new Model();
+        const entity = new Entity();
         model.addEntity(entity);
         fill(entity, Id, Color);
 
@@ -146,464 +171,227 @@ describe('Model fields Api', function () {
         else if (propertyName === 'house')
             instance.value = house2;
         else
-            throw "Unknown property '" + propertyName + "'";
-        Invoke.later(function () {
+            throw `Unknown property '${propertyName}'`;
+        Invoke.later(() => {
             expect(entity[6][propertyName]).toBe(instance.value);
             done();
         });
     }
 
-    it('ModelColorField.Structure', function (done) {
-        require([
-            'model/model',
-            'model/entity',
-            'core/id', 'ui/color',
-            'core/invoke',
-            'forms/model-fields/model-color-field'], function (
-                Model,
-                Entity,
-                Id, Color,
-                Invoke,
-                ModelColorField) {
+    it('ModelColorField.Structure', done => {
+        const properyName = 'color';
 
-            var properyName = 'color';
+        expectPathReverseBinding(new ModelColorField(), properyName);
+        expectPlainReverseBinding(new ModelColorField(), properyName);
 
-            expectPathReverseBinding(Model, Entity, Id, Color, new ModelColorField(), properyName);
-            expectPlainReverseBinding(Model, Entity, Id, Color, new ModelColorField(), properyName);
-
-            expectPathForwardBinding(Model, Entity, Id, Color, new ModelColorField(), Invoke, properyName, function () {
-                expectPlainForwardBinding(Model, Entity, Id, Color, new ModelColorField(), Invoke, properyName, function () {
-                    done();
-                });
-            });
-
-        });
-    });
-    it('ModelDateField.Structure', function (done) {
-        require([
-            'model/model',
-            'model/entity',
-            'core/id', 'ui/color',
-            'core/invoke',
-            'forms/model-fields/model-date-field'], function (
-                Model,
-                Entity,
-                Id, Color,
-                Invoke,
-                ModelDateField) {
-
-            var properyName = 'birth';
-
-            expectPathReverseBinding(Model, Entity, Id, Color, new ModelDateField(), properyName);
-            expectPlainReverseBinding(Model, Entity, Id, Color, new ModelDateField(), properyName);
-
-            expectPathForwardBinding(Model, Entity, Id, Color, new ModelDateField(), Invoke, properyName, function () {
-                expectPlainForwardBinding(Model, Entity, Id, Color, new ModelDateField(), Invoke, properyName, function () {
-                    done();
-                });
-            });
-
-        });
-    });
-    it('ModelDateTimeField.Structure', function (done) {
-        require([
-            'model/model',
-            'model/entity',
-            'core/id', 'ui/color',
-            'core/invoke',
-            'forms/model-fields/model-date-time-field'], function (
-                Model,
-                Entity,
-                Id, Color,
-                Invoke,
-                ModelDateTimeField) {
-
-            var properyName = 'birth';
-
-            expectPathReverseBinding(Model, Entity, Id, Color, new ModelDateTimeField(), properyName);
-            expectPlainReverseBinding(Model, Entity, Id, Color, new ModelDateTimeField(), properyName);
-
-            expectPathForwardBinding(Model, Entity, Id, Color, new ModelDateTimeField(), Invoke, properyName, function () {
-                expectPlainForwardBinding(Model, Entity, Id, Color, new ModelDateTimeField(), Invoke, properyName, function () {
-                    done();
-                });
-            });
-
-        });
-    });
-    it('ModelDropDownField.Structure', function (done) {
-        require([
-            'model/model',
-            'model/entity',
-            'core/id', 'ui/color',
-            'core/invoke',
-            'forms/model-fields/model-drop-down-field'], function (
-                Model,
-                Entity,
-                Id, Color,
-                Invoke,
-                ModelDropDownField) {
-
-            var properyName = 'house';
-
-            var f1 = new ModelDropDownField();
-            f1.displayList = houses;
-            f1.displayField = 'name';
-            expectPathReverseBinding(Model, Entity, Id, Color, f1, properyName);
-            var f2 = new ModelDropDownField();
-            f2.displayList = houses;
-            f2.displayField = 'name';
-            expectPlainReverseBinding(Model, Entity, Id, Color, f2, properyName);
-
-            var f3 = new ModelDropDownField();
-            f3.displayList = houses;
-            f3.displayField = 'name';
-            expectPathForwardBinding(Model, Entity, Id, Color, f3, Invoke, properyName, function () {
-                var f4 = new ModelDropDownField();
-                f4.displayList = houses;
-                f4.displayField = 'name';
-                expectPlainForwardBinding(Model, Entity, Id, Color, f4, Invoke, properyName, function () {
-                    done();
-                });
+        expectPathForwardBinding(new ModelColorField(), properyName, () => {
+            expectPlainForwardBinding(new ModelColorField(), properyName, () => {
+                done();
             });
         });
     });
-    it('ModelEMailField.Structure', function (done) {
-        require([
-            'model/model',
-            'model/entity',
-            'core/id', 'ui/color',
-            'core/invoke',
-            'forms/model-fields/model-email-field'], function (
-                Model,
-                Entity,
-                Id, Color,
-                Invoke,
-                ModelEMailField) {
+    it('ModelDateField.Structure', done => {
+        const properyName = 'birth';
 
-            var properyName = 'name';
+        expectPathReverseBinding(new ModelDateField(), properyName);
+        expectPlainReverseBinding(new ModelDateField(), properyName);
 
-            expectPathReverseBinding(Model, Entity, Id, Color, new ModelEMailField(), properyName);
-            expectPlainReverseBinding(Model, Entity, Id, Color, new ModelEMailField(), properyName);
-
-            expectPathForwardBinding(Model, Entity, Id, Color, new ModelEMailField(), Invoke, properyName, function () {
-                expectPlainForwardBinding(Model, Entity, Id, Color, new ModelEMailField(), Invoke, properyName, function () {
-                    done();
-                });
+        expectPathForwardBinding(new ModelDateField(), properyName, () => {
+            expectPlainForwardBinding(new ModelDateField(), properyName, () => {
+                done();
             });
-
         });
     });
-    it('ModelFormattedField.Structure', function (done) {
-        require([
-            'model/model',
-            'model/entity',
-            'core/id', 'ui/color',
-            'core/invoke',
-            'forms/model-fields/model-formatted-field'], function (
-                Model,
-                Entity,
-                Id, Color,
-                Invoke,
-                ModelFormattedField) {
+    it('ModelDateTimeField.Structure', done => {
+        const properyName = 'birth';
 
-            var properyName = 'name';
+        expectPathReverseBinding(new ModelDateTimeField(), properyName);
+        expectPlainReverseBinding(new ModelDateTimeField(), properyName);
 
-            expectPathReverseBinding(Model, Entity, Id, Color, new ModelFormattedField(), properyName);
-            expectPlainReverseBinding(Model, Entity, Id, Color, new ModelFormattedField(), properyName);
-
-            expectPathForwardBinding(Model, Entity, Id, Color, new ModelFormattedField(), Invoke, properyName, function () {
-                expectPlainForwardBinding(Model, Entity, Id, Color, new ModelFormattedField(), Invoke, properyName, function () {
-                    done();
-                });
+        expectPathForwardBinding(new ModelDateTimeField(), properyName, () => {
+            expectPlainForwardBinding(new ModelDateTimeField(), properyName, () => {
+                done();
             });
-
         });
     });
-    it('ModelMeterField.Structure', function (done) {
-        require([
-            'model/model',
-            'model/entity',
-            'core/id', 'ui/color',
-            'core/invoke',
-            'forms/model-fields/model-meter-field'], function (
-                Model,
-                Entity,
-                Id, Color,
-                Invoke,
-                ModelMeterField) {
+    it('ModelDropDownField.Structure', done => {
+        const properyName = 'house';
 
-            var properyName = 'legs';
+        const f1 = new ModelDropDownField();
+        f1.displayList = houses;
+        f1.displayField = 'name';
+        expectPathReverseBinding(f1, properyName);
+        const f2 = new ModelDropDownField();
+        f2.displayList = houses;
+        f2.displayField = 'name';
+        expectPlainReverseBinding(f2, properyName);
 
-            expectPathReverseBinding(Model, Entity, Id, Color, new ModelMeterField(), properyName);
-            expectPlainReverseBinding(Model, Entity, Id, Color, new ModelMeterField(), properyName);
-
-            expectPathForwardBinding(Model, Entity, Id, Color, new ModelMeterField(), Invoke, properyName, function () {
-                expectPlainForwardBinding(Model, Entity, Id, Color, new ModelMeterField(), Invoke, properyName, function () {
-                    done();
-                });
+        const f3 = new ModelDropDownField();
+        f3.displayList = houses;
+        f3.displayField = 'name';
+        expectPathForwardBinding(f3, properyName, () => {
+            const f4 = new ModelDropDownField();
+            f4.displayList = houses;
+            f4.displayField = 'name';
+            expectPlainForwardBinding(f4, properyName, () => {
+                done();
             });
-
         });
     });
-    it('ModelNumberField.Structure', function (done) {
-        require([
-            'model/model',
-            'model/entity',
-            'core/id', 'ui/color',
-            'core/invoke',
-            'forms/model-fields/model-number-field'], function (
-                Model,
-                Entity,
-                Id, Color,
-                Invoke,
-                ModelNumberField) {
+    it('ModelEMailField.Structure', done => {
+        const properyName = 'name';
 
-            var properyName = 'legs';
+        expectPathReverseBinding(new ModelEMailField(), properyName);
+        expectPlainReverseBinding(new ModelEMailField(), properyName);
 
-            expectPathReverseBinding(Model, Entity, Id, Color, new ModelNumberField(), properyName);
-            expectPlainReverseBinding(Model, Entity, Id, Color, new ModelNumberField(), properyName);
-
-            expectPathForwardBinding(Model, Entity, Id, Color, new ModelNumberField(), Invoke, properyName, function () {
-                expectPlainForwardBinding(Model, Entity, Id, Color, new ModelNumberField(), Invoke, properyName, function () {
-                    done();
-                });
+        expectPathForwardBinding(new ModelEMailField(), properyName, () => {
+            expectPlainForwardBinding(new ModelEMailField(), properyName, () => {
+                done();
             });
-
         });
     });
-    it('ModelPasswordField.Structure', function (done) {
-        require([
-            'model/model',
-            'model/entity',
-            'core/id', 'ui/color',
-            'core/invoke',
-            'forms/model-fields/model-password-field'], function (
-                Model,
-                Entity,
-                Id, Color,
-                Invoke,
-                ModelPasswordField) {
+    it('ModelFormattedField.Structure', done => {
+        const properyName = 'name';
 
-            var properyName = 'name';
+        expectPathReverseBinding(new ModelFormattedField(), properyName);
+        expectPlainReverseBinding(new ModelFormattedField(), properyName);
 
-            expectPathReverseBinding(Model, Entity, Id, Color, new ModelPasswordField(), properyName);
-            expectPlainReverseBinding(Model, Entity, Id, Color, new ModelPasswordField(), properyName);
-
-            expectPathForwardBinding(Model, Entity, Id, Color, new ModelPasswordField(), Invoke, properyName, function () {
-                expectPlainForwardBinding(Model, Entity, Id, Color, new ModelPasswordField(), Invoke, properyName, function () {
-                    done();
-                });
+        expectPathForwardBinding(new ModelFormattedField(), properyName, () => {
+            expectPlainForwardBinding(new ModelFormattedField(), properyName, () => {
+                done();
             });
-
         });
     });
-    it('ModelPhoneField.Structure', function (done) {
-        require([
-            'model/model',
-            'model/entity',
-            'core/id', 'ui/color',
-            'core/invoke',
-            'forms/model-fields/model-phone-field'], function (
-                Model,
-                Entity,
-                Id, Color,
-                Invoke,
-                ModelPhoneField) {
+    it('ModelMeterField.Structure', done => {
+        const properyName = 'legs';
 
-            var properyName = 'name';
+        expectPathReverseBinding(new ModelMeterField(), properyName);
+        expectPlainReverseBinding(new ModelMeterField(), properyName);
 
-            expectPathReverseBinding(Model, Entity, Id, Color, new ModelPhoneField(), properyName);
-            expectPlainReverseBinding(Model, Entity, Id, Color, new ModelPhoneField(), properyName);
-
-            expectPathForwardBinding(Model, Entity, Id, Color, new ModelPhoneField(), Invoke, properyName, function () {
-                expectPlainForwardBinding(Model, Entity, Id, Color, new ModelPhoneField(), Invoke, properyName, function () {
-                    done();
-                });
+        expectPathForwardBinding(new ModelMeterField(), properyName, () => {
+            expectPlainForwardBinding(new ModelMeterField(), properyName, () => {
+                done();
             });
-
         });
     });
-    it('ModelProgressField.Structure', function (done) {
-        require([
-            'model/model',
-            'model/entity',
-            'core/id', 'ui/color',
-            'core/invoke',
-            'forms/model-fields/model-progress-field'], function (
-                Model,
-                Entity,
-                Id, Color,
-                Invoke,
-                ModelProgressField) {
+    it('ModelNumberField.Structure', done => {
+        const properyName = 'legs';
 
-            var properyName = 'legs';
+        expectPathReverseBinding(new ModelNumberField(), properyName);
+        expectPlainReverseBinding(new ModelNumberField(), properyName);
 
-            expectPathReverseBinding(Model, Entity, Id, Color, new ModelProgressField(), properyName);
-            expectPlainReverseBinding(Model, Entity, Id, Color, new ModelProgressField(), properyName);
-
-            expectPathForwardBinding(Model, Entity, Id, Color, new ModelProgressField(), Invoke, properyName, function () {
-                expectPlainForwardBinding(Model, Entity, Id, Color, new ModelProgressField(), Invoke, properyName, function () {
-                    done();
-                });
+        expectPathForwardBinding(new ModelNumberField(), properyName, () => {
+            expectPlainForwardBinding(new ModelNumberField(), properyName, () => {
+                done();
             });
-
         });
     });
-    it('ModelRichTextArea.Structure', function (done) {
-        require([
-            'model/model',
-            'model/entity',
-            'core/id', 'ui/color',
-            'core/invoke',
-            'forms/model-fields/model-rich-text-area'], function (
-                Model,
-                Entity,
-                Id, Color,
-                Invoke,
-                ModelRichTextArea) {
+    it('ModelPasswordField.Structure', done => {
+        const properyName = 'name';
 
-            var properyName = 'name';
+        expectPathReverseBinding(new ModelPasswordField(), properyName);
+        expectPlainReverseBinding(new ModelPasswordField(), properyName);
 
-            expectPathReverseBinding(Model, Entity, Id, Color, new ModelRichTextArea(), properyName);
-            expectPlainReverseBinding(Model, Entity, Id, Color, new ModelRichTextArea(), properyName);
-
-            expectPathForwardBinding(Model, Entity, Id, Color, new ModelRichTextArea(), Invoke, properyName, function () {
-                expectPlainForwardBinding(Model, Entity, Id, Color, new ModelRichTextArea(), Invoke, properyName, function () {
-                    done();
-                });
+        expectPathForwardBinding(new ModelPasswordField(), properyName, () => {
+            expectPlainForwardBinding(new ModelPasswordField(), properyName, () => {
+                done();
             });
-
         });
     });
-    it('ModelSliderField.Structure', function (done) {
-        require([
-            'model/model',
-            'model/entity',
-            'core/id', 'ui/color',
-            'core/invoke',
-            'forms/model-fields/model-slider'], function (
-                Model,
-                Entity,
-                Id, Color,
-                Invoke,
-                ModelSlider) {
+    it('ModelPhoneField.Structure', done => {
+        const properyName = 'name';
 
-            var properyName = 'legs';
+        expectPathReverseBinding(new ModelPhoneField(), properyName);
+        expectPlainReverseBinding(new ModelPhoneField(), properyName);
 
-            expectPathReverseBinding(Model, Entity, Id, Color, new ModelSlider(), properyName);
-            expectPlainReverseBinding(Model, Entity, Id, Color, new ModelSlider(), properyName);
-
-            expectPathForwardBinding(Model, Entity, Id, Color, new ModelSlider(), Invoke, properyName, function () {
-                expectPlainForwardBinding(Model, Entity, Id, Color, new ModelSlider(), Invoke, properyName, function () {
-                    done();
-                });
+        expectPathForwardBinding(new ModelPhoneField(), properyName, () => {
+            expectPlainForwardBinding(new ModelPhoneField(), properyName, () => {
+                done();
             });
-
         });
     });
-    it('ModelTextArea.Structure', function (done) {
-        require([
-            'model/model',
-            'model/entity',
-            'core/id', 'ui/color',
-            'core/invoke',
-            'forms/model-fields/model-text-area'], function (
-                Model,
-                Entity,
-                Id, Color,
-                Invoke,
-                ModelTextArea) {
+    it('ModelProgressField.Structure', done => {
+        const properyName = 'legs';
 
-            var properyName = 'name';
+        expectPathReverseBinding(new ModelProgressField(), properyName);
+        expectPlainReverseBinding(new ModelProgressField(), properyName);
 
-            expectPathReverseBinding(Model, Entity, Id, Color, new ModelTextArea(), properyName);
-            expectPlainReverseBinding(Model, Entity, Id, Color, new ModelTextArea(), properyName);
-
-            expectPathForwardBinding(Model, Entity, Id, Color, new ModelTextArea(), Invoke, properyName, function () {
-                expectPlainForwardBinding(Model, Entity, Id, Color, new ModelTextArea(), Invoke, properyName, function () {
-                    done();
-                });
+        expectPathForwardBinding(new ModelProgressField(), properyName, () => {
+            expectPlainForwardBinding(new ModelProgressField(), properyName, () => {
+                done();
             });
-
         });
     });
-    it('ModelTextField.Structure', function (done) {
-        require([
-            'model/model',
-            'model/entity',
-            'core/id', 'ui/color',
-            'core/invoke',
-            'forms/model-fields/model-text-field'], function (
-                Model,
-                Entity,
-                Id, Color,
-                Invoke,
-                ModelTextField) {
+    it('ModelRichTextArea.Structure', done => {
+        const properyName = 'name';
 
-            var properyName = 'name';
+        expectPathReverseBinding(new ModelRichTextArea(), properyName);
+        expectPlainReverseBinding(new ModelRichTextArea(), properyName);
 
-            expectPathReverseBinding(Model, Entity, Id, Color, new ModelTextField(), properyName);
-            expectPlainReverseBinding(Model, Entity, Id, Color, new ModelTextField(), properyName);
-
-            expectPathForwardBinding(Model, Entity, Id, Color, new ModelTextField(), Invoke, properyName, function () {
-                expectPlainForwardBinding(Model, Entity, Id, Color, new ModelTextField(), Invoke, properyName, function () {
-                    done();
-                });
+        expectPathForwardBinding(new ModelRichTextArea(), properyName, () => {
+            expectPlainForwardBinding(new ModelRichTextArea(), properyName, () => {
+                done();
             });
-
         });
     });
-    it('ModelTimeField.Structure', function (done) {
-        require([
-            'model/model',
-            'model/entity',
-            'core/id', 'ui/color',
-            'core/invoke',
-            'forms/model-fields/model-time-field'], function (
-                Model,
-                Entity,
-                Id, Color,
-                Invoke,
-                ModelTimeField) {
+    it('ModelSliderField.Structure', done => {
+        const properyName = 'legs';
 
-            var properyName = 'legs';
+        expectPathReverseBinding(new ModelSlider(), properyName);
+        expectPlainReverseBinding(new ModelSlider(), properyName);
 
-            expectPathReverseBinding(Model, Entity, Id, Color, new ModelTimeField(), properyName);
-            expectPlainReverseBinding(Model, Entity, Id, Color, new ModelTimeField(), properyName);
-
-            expectPathForwardBinding(Model, Entity, Id, Color, new ModelTimeField(), Invoke, properyName, function () {
-                expectPlainForwardBinding(Model, Entity, Id, Color, new ModelTimeField(), Invoke, properyName, function () {
-                    done();
-                });
+        expectPathForwardBinding(new ModelSlider(), properyName, () => {
+            expectPlainForwardBinding(new ModelSlider(), properyName, () => {
+                done();
             });
-
         });
     });
-    it('ModelUrlField.Structure', function (done) {
-        require([
-            'model/model',
-            'model/entity',
-            'core/id', 'ui/color',
-            'core/invoke',
-            'forms/model-fields/model-url-field'], function (
-                Model,
-                Entity,
-                Id, Color,
-                Invoke,
-                ModelUrlField) {
+    it('ModelTextArea.Structure', done => {
+        const properyName = 'name';
 
-            var properyName = 'name';
+        expectPathReverseBinding(new ModelTextArea(), properyName);
+        expectPlainReverseBinding(new ModelTextArea(), properyName);
 
-            expectPathReverseBinding(Model, Entity, Id, Color, new ModelUrlField(), properyName);
-            expectPlainReverseBinding(Model, Entity, Id, Color, new ModelUrlField(), properyName);
-
-            expectPathForwardBinding(Model, Entity, Id, Color, new ModelUrlField(), Invoke, properyName, function () {
-                expectPlainForwardBinding(Model, Entity, Id, Color, new ModelUrlField(), Invoke, properyName, function () {
-                    done();
-                });
+        expectPathForwardBinding(new ModelTextArea(), properyName, () => {
+            expectPlainForwardBinding(new ModelTextArea(), properyName, () => {
+                done();
             });
+        });
+    });
+    it('ModelTextField.Structure', done => {
+        const properyName = 'name';
 
+        expectPathReverseBinding(new ModelTextField(), properyName);
+        expectPlainReverseBinding(new ModelTextField(), properyName);
+
+        expectPathForwardBinding(new ModelTextField(), properyName, () => {
+            expectPlainForwardBinding(new ModelTextField(), properyName, () => {
+                done();
+            });
+        });
+    });
+    it('ModelTimeField.Structure', done => {
+        const properyName = 'legs';
+
+        expectPathReverseBinding(new ModelTimeField(), properyName);
+        expectPlainReverseBinding(new ModelTimeField(), properyName);
+
+        expectPathForwardBinding(new ModelTimeField(), properyName, () => {
+            expectPlainForwardBinding(new ModelTimeField(), properyName, () => {
+                done();
+            });
+        });
+    });
+    it('ModelUrlField.Structure', done => {
+        const properyName = 'name';
+
+        expectPathReverseBinding(new ModelUrlField(), properyName);
+        expectPlainReverseBinding(new ModelUrlField(), properyName);
+
+        expectPathForwardBinding(new ModelUrlField(), properyName, () => {
+            expectPlainForwardBinding(new ModelUrlField(), properyName, () => {
+                done();
+            });
         });
     });
 });

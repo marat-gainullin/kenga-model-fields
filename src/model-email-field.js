@@ -1,6 +1,6 @@
-import Field from '../fields/email-field';
-import Bound from 'ui/bound';
-import Decorator from '../decorator';
+import Bound from 'kenga/bound';
+import Decorator from 'kenga/decorator';
+import Field from 'kenga-fields/email-field';
 
 class ModelEMailField extends Field {
     constructor() {

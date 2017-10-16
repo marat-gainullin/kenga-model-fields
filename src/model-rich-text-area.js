@@ -1,6 +1,6 @@
-import Area from '../fields/rich-text-area';
-import Bound from 'ui/bound';
-import Decorator from '../decorator';
+import Bound from 'kenga/bound';
+import Decorator from 'kenga/decorator';
+import Area from 'kenga-fields/rich-text-area';
 
 class ModelRichTextArea extends Area {
     constructor(text) {

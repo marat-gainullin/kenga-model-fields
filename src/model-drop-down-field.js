@@ -1,6 +1,6 @@
-import Field from '../fields/drop-down-field';
-import Bound from 'ui/bound';
-import Decorator from '../decorator';
+import Bound from 'kenga/bound';
+import Decorator from 'kenga/decorator';
+import Field from 'kenga-fields/drop-down-field';
 
 class ModelDropDownField extends Field {
     constructor() {
