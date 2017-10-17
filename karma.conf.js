@@ -44,6 +44,9 @@ module.exports = function (config) {
             extensions: ['.js']
         },
         // test results reporter to use
+        // Continuous Integration mode
+        // if true, Karma captures browsers, runs the tests and exits
+        singleRun: true,
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
         reporters: ['progress', 'kjhtml', 'coverage'],
@@ -72,9 +75,6 @@ module.exports = function (config) {
         browsers: ['Chrome'],
         // Concurrency level
         // how many browser should be started simultaneous
-        concurrency: Infinity,
-        // Continuous Integration mode
-        // if true, Karma captures browsers, runs the tests and exits
-        singleRun: true
+        concurrency: Infinity
     });
 };

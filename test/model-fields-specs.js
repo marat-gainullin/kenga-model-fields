@@ -32,7 +32,7 @@ describe('Model fields Api', () => {
     const house2 = {name: 'Enville'};
     const houses = [house1, house2];
 
-    function fill(entity, Id, Color) {
+    function fill(entity) {
         entity.push(
                 {id: Id.generate(), name: 'Joe', legs: 2, hungry: false, birth: new Date(), color: new Color('#fcfcfc'), house: house1},
                 {id: Id.generate(), name: 'Jane', legs: 2, hungry: false, birth: new Date(), color: new Color('#fafafa'), house: house1},
@@ -49,7 +49,7 @@ describe('Model fields Api', () => {
         const model = new Model();
         const entity = new Entity();
         model.addEntity(entity);
-        fill(entity, Id, Color);
+        fill(entity);
 
         expect(instance.value).toBeNull();
         instance.data = entity;
@@ -118,7 +118,7 @@ describe('Model fields Api', () => {
         expect(instance.value).toBe(entity[6][propertyName]);
     }
 
-    function expectPathForwardBinding(instance, propertyName, done) {
+    function expectPathForwardBinding(instance, propertyName) {
         const model = new Model();
         const entity = new Entity();
         model.addEntity(entity);
@@ -142,13 +142,15 @@ describe('Model fields Api', () => {
             instance.value = house2;
         else
             throw `Unknown property '${propertyName}'`;
-        Invoke.later(() => {
-            expect(entity[6][propertyName]).toBe(instance.value);
-            done();
+        return new Promise((resolve) => {
+            Invoke.later(() => {
+                expect(entity[6][propertyName]).toBe(instance.value);
+                resolve();
+            });
         });
     }
 
-    function expectPlainForwardBinding(instance, propertyName, done) {
+    function expectPlainForwardBinding(instance, propertyName) {
         const model = new Model();
         const entity = new Entity();
         model.addEntity(entity);
@@ -172,9 +174,11 @@ describe('Model fields Api', () => {
             instance.value = house2;
         else
             throw `Unknown property '${propertyName}'`;
-        Invoke.later(() => {
-            expect(entity[6][propertyName]).toBe(instance.value);
-            done();
+        return new Promise((resolve) => {
+            Invoke.later(() => {
+                expect(entity[6][propertyName]).toBe(instance.value);
+                resolve();
+            });
         });
     }
 
@@ -184,11 +188,12 @@ describe('Model fields Api', () => {
         expectPathReverseBinding(new ModelColorField(), properyName);
         expectPlainReverseBinding(new ModelColorField(), properyName);
 
-        expectPathForwardBinding(new ModelColorField(), properyName, () => {
-            expectPlainForwardBinding(new ModelColorField(), properyName, () => {
-                done();
-            });
-        });
+        expectPathForwardBinding(new ModelColorField(), properyName)
+                .then(() => {
+                    return expectPlainForwardBinding(new ModelColorField(), properyName);
+                })
+                .then(done)
+                .catch(done.fail);
     });
     it('ModelDateField.Structure', done => {
         const properyName = 'birth';
@@ -196,11 +201,12 @@ describe('Model fields Api', () => {
         expectPathReverseBinding(new ModelDateField(), properyName);
         expectPlainReverseBinding(new ModelDateField(), properyName);
 
-        expectPathForwardBinding(new ModelDateField(), properyName, () => {
-            expectPlainForwardBinding(new ModelDateField(), properyName, () => {
-                done();
-            });
-        });
+        expectPathForwardBinding(new ModelDateField(), properyName)
+                .then(() => {
+                    return expectPlainForwardBinding(new ModelDateField(), properyName);
+                })
+                .then(done)
+                .catch(done.fail);
     });
     it('ModelDateTimeField.Structure', done => {
         const properyName = 'birth';
@@ -208,35 +214,37 @@ describe('Model fields Api', () => {
         expectPathReverseBinding(new ModelDateTimeField(), properyName);
         expectPlainReverseBinding(new ModelDateTimeField(), properyName);
 
-        expectPathForwardBinding(new ModelDateTimeField(), properyName, () => {
-            expectPlainForwardBinding(new ModelDateTimeField(), properyName, () => {
-                done();
-            });
-        });
+        expectPathForwardBinding(new ModelDateTimeField(), properyName)
+                .then(() => {
+                    return expectPlainForwardBinding(new ModelDateTimeField(), properyName);
+                })
+                .then(done)
+                .catch(done.fail);
     });
     it('ModelDropDownField.Structure', done => {
         const properyName = 'house';
 
         const f1 = new ModelDropDownField();
-        f1.displayList = houses;
+        f1.values = houses;
         f1.displayField = 'name';
         expectPathReverseBinding(f1, properyName);
         const f2 = new ModelDropDownField();
-        f2.displayList = houses;
+        f2.values = houses;
         f2.displayField = 'name';
         expectPlainReverseBinding(f2, properyName);
 
         const f3 = new ModelDropDownField();
-        f3.displayList = houses;
+        f3.values = houses;
         f3.displayField = 'name';
-        expectPathForwardBinding(f3, properyName, () => {
-            const f4 = new ModelDropDownField();
-            f4.displayList = houses;
-            f4.displayField = 'name';
-            expectPlainForwardBinding(f4, properyName, () => {
-                done();
-            });
-        });
+        expectPathForwardBinding(f3, properyName)
+                .then(() => {
+                    const f4 = new ModelDropDownField();
+                    f4.values = houses;
+                    f4.displayField = 'name';
+                    return expectPlainForwardBinding(f4, properyName);
+                })
+                .then(done)
+                .catch(done.fail);
     });
     it('ModelEMailField.Structure', done => {
         const properyName = 'name';
@@ -244,11 +252,12 @@ describe('Model fields Api', () => {
         expectPathReverseBinding(new ModelEMailField(), properyName);
         expectPlainReverseBinding(new ModelEMailField(), properyName);
 
-        expectPathForwardBinding(new ModelEMailField(), properyName, () => {
-            expectPlainForwardBinding(new ModelEMailField(), properyName, () => {
-                done();
-            });
-        });
+        expectPathForwardBinding(new ModelEMailField(), properyName)
+                .then(() => {
+                    return expectPlainForwardBinding(new ModelEMailField(), properyName);
+                })
+                .then(done)
+                .catch(done.fail);
     });
     it('ModelFormattedField.Structure', done => {
         const properyName = 'name';
@@ -256,11 +265,12 @@ describe('Model fields Api', () => {
         expectPathReverseBinding(new ModelFormattedField(), properyName);
         expectPlainReverseBinding(new ModelFormattedField(), properyName);
 
-        expectPathForwardBinding(new ModelFormattedField(), properyName, () => {
-            expectPlainForwardBinding(new ModelFormattedField(), properyName, () => {
-                done();
-            });
-        });
+        expectPathForwardBinding(new ModelFormattedField(), properyName)
+                .then(() => {
+                    return expectPlainForwardBinding(new ModelFormattedField(), properyName);
+                })
+                .then(done)
+                .catch(done.fail);
     });
     it('ModelMeterField.Structure', done => {
         const properyName = 'legs';
@@ -268,11 +278,12 @@ describe('Model fields Api', () => {
         expectPathReverseBinding(new ModelMeterField(), properyName);
         expectPlainReverseBinding(new ModelMeterField(), properyName);
 
-        expectPathForwardBinding(new ModelMeterField(), properyName, () => {
-            expectPlainForwardBinding(new ModelMeterField(), properyName, () => {
-                done();
-            });
-        });
+        expectPathForwardBinding(new ModelMeterField(), properyName)
+                .then(() => {
+                    return expectPlainForwardBinding(new ModelMeterField(), properyName);
+                })
+                .then(done)
+                .catch(done.fail);
     });
     it('ModelNumberField.Structure', done => {
         const properyName = 'legs';
@@ -280,11 +291,12 @@ describe('Model fields Api', () => {
         expectPathReverseBinding(new ModelNumberField(), properyName);
         expectPlainReverseBinding(new ModelNumberField(), properyName);
 
-        expectPathForwardBinding(new ModelNumberField(), properyName, () => {
-            expectPlainForwardBinding(new ModelNumberField(), properyName, () => {
-                done();
-            });
-        });
+        expectPathForwardBinding(new ModelNumberField(), properyName)
+                .then(() => {
+                    return expectPlainForwardBinding(new ModelNumberField(), properyName);
+                })
+                .then(done)
+                .catch(done.fail);
     });
     it('ModelPasswordField.Structure', done => {
         const properyName = 'name';
@@ -292,11 +304,12 @@ describe('Model fields Api', () => {
         expectPathReverseBinding(new ModelPasswordField(), properyName);
         expectPlainReverseBinding(new ModelPasswordField(), properyName);
 
-        expectPathForwardBinding(new ModelPasswordField(), properyName, () => {
-            expectPlainForwardBinding(new ModelPasswordField(), properyName, () => {
-                done();
-            });
-        });
+        expectPathForwardBinding(new ModelPasswordField(), properyName)
+                .then(() => {
+                    return expectPlainForwardBinding(new ModelPasswordField(), properyName);
+                })
+                .then(done)
+                .catch(done.fail);
     });
     it('ModelPhoneField.Structure', done => {
         const properyName = 'name';
@@ -304,11 +317,12 @@ describe('Model fields Api', () => {
         expectPathReverseBinding(new ModelPhoneField(), properyName);
         expectPlainReverseBinding(new ModelPhoneField(), properyName);
 
-        expectPathForwardBinding(new ModelPhoneField(), properyName, () => {
-            expectPlainForwardBinding(new ModelPhoneField(), properyName, () => {
-                done();
-            });
-        });
+        expectPathForwardBinding(new ModelPhoneField(), properyName)
+                .then(() => {
+                    return expectPlainForwardBinding(new ModelPhoneField(), properyName);
+                })
+                .then(done)
+                .catch(done.fail);
     });
     it('ModelProgressField.Structure', done => {
         const properyName = 'legs';
@@ -316,11 +330,12 @@ describe('Model fields Api', () => {
         expectPathReverseBinding(new ModelProgressField(), properyName);
         expectPlainReverseBinding(new ModelProgressField(), properyName);
 
-        expectPathForwardBinding(new ModelProgressField(), properyName, () => {
-            expectPlainForwardBinding(new ModelProgressField(), properyName, () => {
-                done();
-            });
-        });
+        expectPathForwardBinding(new ModelProgressField(), properyName)
+                .then(() => {
+                    return expectPlainForwardBinding(new ModelProgressField(), properyName);
+                })
+                .then(done)
+                .catch(done.fail);
     });
     it('ModelRichTextArea.Structure', done => {
         const properyName = 'name';
@@ -328,11 +343,12 @@ describe('Model fields Api', () => {
         expectPathReverseBinding(new ModelRichTextArea(), properyName);
         expectPlainReverseBinding(new ModelRichTextArea(), properyName);
 
-        expectPathForwardBinding(new ModelRichTextArea(), properyName, () => {
-            expectPlainForwardBinding(new ModelRichTextArea(), properyName, () => {
-                done();
-            });
-        });
+        expectPathForwardBinding(new ModelRichTextArea(), properyName)
+                .then(() => {
+                    return expectPlainForwardBinding(new ModelRichTextArea(), properyName);
+                })
+                .then(done)
+                .catch(done.fail);
     });
     it('ModelSliderField.Structure', done => {
         const properyName = 'legs';
@@ -340,11 +356,12 @@ describe('Model fields Api', () => {
         expectPathReverseBinding(new ModelSlider(), properyName);
         expectPlainReverseBinding(new ModelSlider(), properyName);
 
-        expectPathForwardBinding(new ModelSlider(), properyName, () => {
-            expectPlainForwardBinding(new ModelSlider(), properyName, () => {
-                done();
-            });
-        });
+        expectPathForwardBinding(new ModelSlider(), properyName)
+                .then(() => {
+                    return expectPlainForwardBinding(new ModelSlider(), properyName);
+                })
+                .then(done)
+                .catch(done.fail);
     });
     it('ModelTextArea.Structure', done => {
         const properyName = 'name';
@@ -352,11 +369,12 @@ describe('Model fields Api', () => {
         expectPathReverseBinding(new ModelTextArea(), properyName);
         expectPlainReverseBinding(new ModelTextArea(), properyName);
 
-        expectPathForwardBinding(new ModelTextArea(), properyName, () => {
-            expectPlainForwardBinding(new ModelTextArea(), properyName, () => {
-                done();
-            });
-        });
+        expectPathForwardBinding(new ModelTextArea(), properyName)
+                .then(() => {
+                    return expectPlainForwardBinding(new ModelTextArea(), properyName);
+                })
+                .then(done)
+                .catch(done.fail);
     });
     it('ModelTextField.Structure', done => {
         const properyName = 'name';
@@ -364,11 +382,12 @@ describe('Model fields Api', () => {
         expectPathReverseBinding(new ModelTextField(), properyName);
         expectPlainReverseBinding(new ModelTextField(), properyName);
 
-        expectPathForwardBinding(new ModelTextField(), properyName, () => {
-            expectPlainForwardBinding(new ModelTextField(), properyName, () => {
-                done();
-            });
-        });
+        expectPathForwardBinding(new ModelTextField(), properyName)
+                .then(() => {
+                    return expectPlainForwardBinding(new ModelTextField(), properyName);
+                })
+                .then(done)
+                .catch(done.fail);
     });
     it('ModelTimeField.Structure', done => {
         const properyName = 'legs';
@@ -376,11 +395,12 @@ describe('Model fields Api', () => {
         expectPathReverseBinding(new ModelTimeField(), properyName);
         expectPlainReverseBinding(new ModelTimeField(), properyName);
 
-        expectPathForwardBinding(new ModelTimeField(), properyName, () => {
-            expectPlainForwardBinding(new ModelTimeField(), properyName, () => {
-                done();
-            });
-        });
+        expectPathForwardBinding(new ModelTimeField(), properyName)
+                .then(() => {
+                    return expectPlainForwardBinding(new ModelTimeField(), properyName);
+                })
+                .then(done)
+                .catch(done.fail);
     });
     it('ModelUrlField.Structure', done => {
         const properyName = 'name';
@@ -388,10 +408,11 @@ describe('Model fields Api', () => {
         expectPathReverseBinding(new ModelUrlField(), properyName);
         expectPlainReverseBinding(new ModelUrlField(), properyName);
 
-        expectPathForwardBinding(new ModelUrlField(), properyName, () => {
-            expectPlainForwardBinding(new ModelUrlField(), properyName, () => {
-                done();
-            });
-        });
+        expectPathForwardBinding(new ModelUrlField(), properyName)
+                .then(() => {
+                    return expectPlainForwardBinding(new ModelUrlField(), properyName);
+                })
+                .then(done)
+                .catch(done.fail);
     });
 });
