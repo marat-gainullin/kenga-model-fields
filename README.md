@@ -1,4 +1,4 @@
-# kenga-model-fields
+# Kenga model fields
 Kenga bindable input widgets with **JavaScript typed** values. You can find almost all HTML5 input widgets here.
 They all have data binding feature, `value` property and fire value change events.
 
