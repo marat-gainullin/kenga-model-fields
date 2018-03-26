@@ -1,6 +1,6 @@
 {
   "name": "kenga-model-fields",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Kenga bindable input widgets.",
   "main": "index.js",
   "repository": "https://github.com/marat-gainullin/kenga-model-fields.git",
