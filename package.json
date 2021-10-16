@@ -1,6 +1,6 @@
 {
   "name": "kenga-model-fields",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "Kenga bindable input widgets.",
   "repository": "https://github.com/marat-gainullin/kenga-model-fields.git",
   "author": "marat-gainullin <mg@altsoft.biz>",
@@ -11,8 +11,8 @@
     "lib": "rollup -c rollup.lib.config.js"
   },
   "dependencies": {
-    "kenga": "0.0.44",
-    "kenga-fields": "0.0.26"
+    "kenga": "0.0.45",
+    "kenga-fields": "0.0.27"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.8",
