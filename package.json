@@ -1,6 +1,6 @@
 {
   "name": "kenga-model-fields",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "description": "Kenga bindable input widgets.",
   "repository": "https://github.com/marat-gainullin/kenga-model-fields.git",
   "author": "marat-gainullin <mg@altsoft.biz>",
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "kenga": "0.0.48",
-    "kenga-fields": "0.0.30"
+    "kenga-fields": "0.0.31"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.8",
