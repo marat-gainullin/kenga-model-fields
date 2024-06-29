@@ -14,6 +14,7 @@ class ModelDropDownField extends Field {
         let elementsReg = null;
         let values = null;
         let displayField = null;
+        let onRender = null
 
         function unbindValues() {
             if (lengthReg) {
@@ -30,7 +31,7 @@ class ModelDropDownField extends Field {
         function bindValues() {
             if (values) {
                 values.forEach(item => {
-                    self.addValue(displayField ? item[displayField] : item /* assume plain values */ , item);
+                    self.addValue(onRender ? onRender(item) : displayField ? Bound.getPathData(item, displayField) : item , item);
                 });
                 lengthReg = Bound.listen(values, evt => {
                     if (evt.propertyName === 'length')
@@ -69,6 +70,18 @@ class ModelDropDownField extends Field {
             set: function(aValue) {
                 if (displayField !== aValue) {
                     displayField = aValue;
+                    rebindValues();
+                }
+            }
+        });
+
+        Object.defineProperty(this, 'onRender', {
+            get: function() {
+                return onRender;
+            },
+            set: function(aValue) {
+                if (onRender !== aValue) {
+                    onRender = aValue;
                     rebindValues();
                 }
             }

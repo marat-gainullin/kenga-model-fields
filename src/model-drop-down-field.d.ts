@@ -17,6 +17,10 @@ export default class ModelDropDownField extends Field implements Bound, Decorato
    */
   values: any[]
   /**
+   * A function which will be called to compute a label for object in #values.
+   */
+  onRender: (item : any) => string
+  /**
    * A property of object in #values, with will be used as label for the drop-down items.
    */
   displayField: string
