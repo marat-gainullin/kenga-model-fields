@@ -1,6 +1,6 @@
-import Field from 'kenga-fields/drop-down-field';
-import Bound from 'kenga/bound';
-import Decorator from 'kenga/decorator';
+import Field from 'kenga-fields/lookup-field'
+import Bound from 'kenga/bound'
+import Decorator from 'kenga/decorator'
 import Widget from 'kenga/widget'
 
 export default class ModelLookupField extends Field implements Bound, Decorator {
